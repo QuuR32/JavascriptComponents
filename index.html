@@ -1,0 +1,46 @@
+<html>
+
+<head>
+	<script src="jquery-1.10.1.min.js"></script>
+	<script src="js/ComponentOrganizer.js"></script>
+	<script src="js/RotationAnimation.js"></script>
+	<script src="js/DivData.js"></script>
+	<script src="js/AjaxRequestListener.js"></script>
+	<title>Bonjour</title>
+</head>
+
+<body>
+<div id="divInfo" style="border: Solid 5px Orange; padding: 5px; border-radius: 10px; text-align: center;">Information</div>
+<br />
+<img src="img/roue.png" id="imgRoue1"></img>
+<img src="img/roue.png" id="imgRoue2" style="margin-left: 0.5em;"></img>
+<img src="img/roue.png" id="imgRoue3" style="margin-left: 0.5em;"></img>
+<br />
+<br />
+<br />
+<div id="divData"></div>
+
+<script>
+	window.displayMsg = function displayInfo(msg) {
+		document.getElementById("divInfo").innerText = msg;
+	};
+
+	var arl = new AjaxRequestListener();
+
+	var componentOrganizer = new ComponentOrganizer();
+
+	var rotationAnimation1 = new RotationAnimation();
+	var rotationAnimation2 = new RotationAnimation();
+	var rotationAnimation3 = new RotationAnimation();
+	
+	rotationAnimation1.animate("imgRoue1", "cw", 20);
+	rotationAnimation2.animate("imgRoue2", "ccw", 20);
+	rotationAnimation3.animate("imgRoue3", "cw", 20);
+
+	var divData = new DivData(arl);
+	divData.retrieve();
+</script>
+
+</body>
+
+</html>
