@@ -1,14 +1,14 @@
 function AjaxRequestListener() {
 	this.listRequest = new Array;
 	this.stopped = true;
-	this.idToken;
 	
-	this.SubscribeRequestServer = function SubscribeRequestServer(_method, _param, _callbackMethodName, _callbackErrorMethodName) {
+	this.SubscribeRequestServer = function SubscribeRequestServer(_method, _param, _objectWaiting) {
+		if (_objectWaiting == null) window.displayMsg("Object waiting cannot be null !");
+			
 		var request = new Object;
 		request["method"] = _method;
 		request["param"] = _param;
-		request["callbackMethodName"] = _callbackMethodName;
-		request["callbackErrorMethodName"] = _callbackErrorMethodName;
+		request["objectWating"] = _objectWaiting;
 		this.listRequest.push(request);
 		
 		if(this.stopped) {
@@ -22,21 +22,17 @@ function AjaxRequestListener() {
 		
 		if(this.listRequest.length > 0) {
 			var request = this.listRequest.shift();
-			ExecuteRequestServer(request.method, request.param, request.callbackMethodName, request.callbackErrorMethodName);
+			ExecuteRequestServer(request.method, request.param, request.objectWating);
 		}
 		
 		if(!this.stopped) {
-			this.idToken = self.setInterval(function(){
+			self.setTimeout(function(){
 				me.TreatRequestList();
 			}, 1000);
-		} else {
-			clearInterval(idToken);
 		}
 	};
 	
-	function ExecuteRequestServer(_method, _param, _callbackSuccessMethodName, _callbackErrorMethodName) {
-		window.displayMsg("Chargement : " + _method + "...");
-		
+	function ExecuteRequestServer(_method, _param, _objectWaiting) {
 		var _url = "php/ws.php";
 		
 		$.ajax({
@@ -58,31 +54,29 @@ function AjaxRequestListener() {
 			// code to run if the request succeeds;
 			// the response is passed to the function
 			success: function( _json ) {
-				if (_callbackSuccessMethodName != null) {
-					if (_json['root'].length != 0) {
-						// alert(_json['root']);
-						for(i=0; i<_json['root'].length; i++) {
-							for(var key in _json['root'][i]) {
-								var object = _json['root'][i][key];
-								
-								var jsonFound;
-								
-								object = GetObjectWithJsonTransform(object);
-								
-								_json['root'][i][key] = object;
-							}
+				if (_json['root'].length != 0) {
+					// alert(_json['root']);
+					for(i=0; i<_json['root'].length; i++) {
+						for(var key in _json['root'][i]) {
+							var object = _json['root'][i][key];
+							
+							var jsonFound;
+							
+							object = GetObjectWithJsonTransform(object);
+							
+							_json['root'][i][key] = object;
 						}
 					}
-					window[_callbackSuccessMethodName](_json);
 				}
+				_objectWaiting.callback(_json);
 			},
 			
 			// code to run if the request fails; the raw request and
 			// status codes are passed to the function
 			error: function(xhr, status) {
 				window.displayMsg("Sorry, there was a problem : " + xhr.responseText);
-				
-				window[_callbackErrorMethodName](_json);
+
+				_objectWaiting.callbackError(_json);
 			}
 		});
 	}
