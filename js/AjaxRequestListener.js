@@ -3,7 +3,7 @@ function AjaxRequestListener() {
 	this.stopped = true;
 	
 	this.SubscribeRequestServer = function SubscribeRequestServer(_method, _param, _objectWaiting) {
-		if (_objectWaiting == null) window.displayMsg("Object waiting cannot be null !");
+		if (_objectWaiting == null) window.DisplayMsg("Object waiting cannot be null !");
 			
 		var request = new Object;
 		request["method"] = _method;
@@ -36,75 +36,19 @@ function AjaxRequestListener() {
 		var _url = "php/ws.php";
 		
 		$.ajax({
-			// the URL for the request
 			url: _url,
-			
-			// the data to send (will be converted to a query string)
 			data: {
 				method: _method,
 				param: _param
 			},
-			
-			// the type of data we expect back
 			dataType : "json",
-			
-			// whether this is a POST or GET request
 			type: "POST",
-			
-			// code to run if the request succeeds;
-			// the response is passed to the function
-			success: function( _json ) {
-				if (_json['root'].length != 0) {
-					// alert(_json['root']);
-					for(i=0; i<_json['root'].length; i++) {
-						for(var key in _json['root'][i]) {
-							var object = _json['root'][i][key];
-							
-							var jsonFound;
-							
-							object = GetObjectWithJsonTransform(object);
-							
-							_json['root'][i][key] = object;
-						}
-					}
-				}
-				_objectWaiting.callback(_json);
+			success: function(_json) {
+				_objectWaiting.Callback(_json.root);
 			},
-			
-			// code to run if the request fails; the raw request and
-			// status codes are passed to the function
 			error: function(xhr, status) {
-				window.displayMsg("Sorry, there was a problem : " + xhr.responseText);
-
-				_objectWaiting.callbackError(_json);
+				_objectWaiting.CallbackError(xhr, status);
 			}
 		});
-	}
-	
-	function GetObjectWithJsonTransform(object) {
-		for(var keyObject in object) {
-			if(object.hasOwnProperty(keyObject)) {
-				try
-				{
-					var jsonFound = JSON.parse(object[keyObject]);
-					   
-					if (jsonFound['root'] != null) {
-						if (jsonFound['root'].length > 1) {
-							object[keyObject] = new Array;
-							for(j=0; j<jsonFound['root'].length; j++) {
-								object[keyObject][j] = GetObjectWithJsonTransform(jsonFound['root'][j][keyObject]);
-							}
-						} else {
-							object[keyObject] = GetObjectWithJsonTransform(jsonFound['root'][0][keyObject]);
-						}
-					}
-				}
-				catch(e)
-				{
-				}
-			}
-		}
-		
-		return object;
 	}
 }

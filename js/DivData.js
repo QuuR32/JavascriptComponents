@@ -1,35 +1,23 @@
-function DivData(_arl) {
+function DivData(_arl, _dataAdapter) {
 	this.arl = _arl;
-	this.currentDisplay = "";
+	this.dataAdapter = _dataAdapter;
 	
-	this.retrieve = function retrieve() {
+	this.Retrieve = function Retrieve() {
 		var me = this;
 		
-		this.arl.SubscribeRequestServer("GetListNews", null, this);
+		this.arl.SubscribeRequestServer(this.dataAdapter.asyncMethodName, null, this);
 		
-		setTimeout(function() {
-			me.retrieve();
+		window.setTimeout(function() {
+			me.Retrieve();
 		}, 1000);
 	};
 
-	this.callback = function callBack(_json) {
-		if (_json['root'].length == 0) {
-			window.displayMsg('Aucune news trouvée');
-		} else {
-			var toDisplay = "";
-			for(i=0; i<_json['root'].length; i++) {
-				var news = _json['root'][i]['news'];
-				toDisplay = toDisplay + "" + news.Titre + "<br />";
-			}
-			
-			if (toDisplay != this.currentDisplay) {
-				this.currentDisplay = toDisplay;
-				window.displayMsg(toDisplay);
-			}
-		}
+	this.Callback = function CallBack(_json) {
+		this.dataAdapter.DisplayData(_json);
 	};
 
-	this.callbackError = function callbackError() {
-		window.displayMsg('Error : CallbackDivDataError');
+	this.CallbackError = function CallbackError(xhr, status) {
+		this.currentDisplay = 'Error : CallbackDivDataError<br />{<p style="padding-left: 1em;">response: ' +  xhr.responseText + '<br />status: ' +  status + '</p>}';
+		window.DisplayMsg(this.currentDisplay);
 	};
 }
