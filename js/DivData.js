@@ -5,7 +5,7 @@ function DivData(_arl, _dataAdapter) {
 	this.Retrieve = function Retrieve() {
 		var me = this;
 		
-		this.arl.SubscribeRequestServer(this.dataAdapter.asyncMethodName, null, this);
+		this.arl.SubscribeRequestServer(this.dataAdapter.url, this.dataAdapter.asyncMethodName, null, this);
 		
 		window.setTimeout(function() {
 			me.Retrieve();

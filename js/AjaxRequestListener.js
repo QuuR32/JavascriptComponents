@@ -2,10 +2,11 @@ function AjaxRequestListener() {
 	this.listRequest = new Array;
 	this.stopped = true;
 	
-	this.SubscribeRequestServer = function SubscribeRequestServer(_method, _param, _objectWaiting) {
+	this.SubscribeRequestServer = function SubscribeRequestServer(_url, _method, _param, _objectWaiting) {
 		if (_objectWaiting == null) window.DisplayMsg("Object waiting cannot be null !");
 			
 		var request = new Object;
+		request["url"] = _url;
 		request["method"] = _method;
 		request["param"] = _param;
 		request["objectWating"] = _objectWaiting;
@@ -22,7 +23,7 @@ function AjaxRequestListener() {
 		
 		if(this.listRequest.length > 0) {
 			var request = this.listRequest.shift();
-			ExecuteRequestServer(request.method, request.param, request.objectWating);
+			ExecuteRequestServer(request.url, request.method, request.param, request.objectWating);
 		}
 		
 		if(!this.stopped) {
@@ -32,8 +33,8 @@ function AjaxRequestListener() {
 		}
 	};
 	
-	function ExecuteRequestServer(_method, _param, _objectWaiting) {
-		var _url = "php/ws.php";
+	function ExecuteRequestServer(_url, _method, _param, _objectWaiting) {
+		var _url = "/JavascriptComponents_WS/" + _url;
 		
 		$.ajax({
 			url: _url,

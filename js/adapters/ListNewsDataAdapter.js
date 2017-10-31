@@ -1,6 +1,7 @@
 function ListNewsDataAdapter(_elemId) {
-	// asyncMethodName has to be defined for all data adapters to know what method to call
-	this.asyncMethodName = "GetListNews";
+	// url and asyncMethodName has to be defined for all data adapters to know what method to call
+	this.url = "news.php";
+	this.asyncMethodName = "all";
 	
 	this.elem = document.getElementById(_elemId);
 		
@@ -11,7 +12,7 @@ function ListNewsDataAdapter(_elemId) {
 			this.currentJson = _json;
 			
 			if (_json.length == 0) {
-				this.elem.innerHTML = "Aucune news trouvée !";
+				this.elem.innerHTML = "Aucune news trouvee !";
 			} else {
 				var body = document.getElementsByTagName('body')[0];
 			    var tbl = document.createElement('table');
