@@ -2,22 +2,22 @@ function DivData(_arl, _dataAdapter) {
 	this.arl = _arl;
 	this.dataAdapter = _dataAdapter;
 	
-	this.Retrieve = function Retrieve() {
+	this.retrieve = function retrieve() {
 		var me = this;
 		
-		this.arl.SubscribeRequestServer(this.dataAdapter.url, this.dataAdapter.asyncMethodName, null, this);
+		this.arl.subscribeRequestServer(this.dataAdapter.url, this.dataAdapter.asyncMethodName, null, this);
 		
 		window.setTimeout(function() {
-			me.Retrieve();
+			me.retrieve();
 		}, 1000);
 	};
 
-	this.Callback = function CallBack(_json) {
-		this.dataAdapter.DisplayData(_json);
+	this.callback = function callBack(_json) {
+		this.dataAdapter.displayData(_json);
 	};
 
-	this.CallbackError = function CallbackError(xhr, status) {
+	this.callbackError = function callbackError(xhr, status) {
 		this.currentDisplay = 'Error : CallbackDivDataError<br />{<p style="padding-left: 1em;">response: ' +  xhr.responseText + '<br />status: ' +  status + '</p>}';
-		window.DisplayMsg(this.currentDisplay);
+		window.displayMsg(this.currentDisplay);
 	};
 }

@@ -7,7 +7,7 @@ function ListNewsDataAdapter(_elemId) {
 		
 	this.currentJson = "=";
 	
-	this.DisplayData = function DisplayData(_json) {
+	this.displayData = function displayData(_json) {
 		if (JSON.stringify(this.currentJson) != JSON.stringify(_json)) {
 			this.currentJson = _json;
 			

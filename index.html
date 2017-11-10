@@ -29,11 +29,11 @@
 <truc id="truc1" data-counter="1"></truc>
 
 <script>
-	window.DisplayMsg = function DisplayInfo(msg) {
+	window.displayMsg = function displayInfo(msg) {
 		document.getElementById("divInfo").innerHTML = msg;
 	};
 
-	function ObjectsAreSame(x, y) {
+	function objectsAreSame(x, y) {
 	   var objectsAreSame = true;
 	   for(var propertyName in x) {
 	      if(x[propertyName] !== y[propertyName]) {
@@ -59,12 +59,12 @@
 	var zoomAnimation1 = new ZoomAnimation();
 
 	var divData = new DivData(arl, new ListNewsDataAdapter("divData"));
-	divData.Retrieve();
+	divData.retrieve();
 
 	if (!localStorage.getItem("counter"))
 		localStorage.setItem("counter", 0);
 	
-	window.DisplayMsg(localStorage.getItem('counter'));
+	window.displayMsg(localStorage.getItem('counter'));
 
 	localStorage.setItem("counter", parseInt(localStorage.getItem("counter")) + 1);
 

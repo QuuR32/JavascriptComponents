@@ -2,53 +2,54 @@ function AjaxRequestListener() {
 	this.listRequest = new Array;
 	this.stopped = true;
 	
-	this.SubscribeRequestServer = function SubscribeRequestServer(_url, _method, _param, _objectWaiting) {
-		if (_objectWaiting == null) window.DisplayMsg("Object waiting cannot be null !");
+	this.subscribeRequestServer = function subscribeRequestServer(_url, _method, _param, _objectWaiting) {
+		if (_objectWaiting == null) window.displayMsg("Object waiting cannot be null !");
 			
-		var request = new Object;
-		request["url"] = _url;
-		request["method"] = _method;
-		request["param"] = _param;
-		request["objectWating"] = _objectWaiting;
+		var request = {
+				url: _url,
+				method: _method,
+				param: _param,
+				objectWating: _objectWaiting
+		}
 		this.listRequest.push(request);
 		
 		if(this.stopped) {
 			this.stopped = false;
-			this.TreatRequestList();
+			this.treatRequestList();
 		}
 	};
 	
-	this.TreatRequestList = function TreatRequestList() {
+	this.treatRequestList = function treatRequestList() {
 		var me = this;
 		
 		if(this.listRequest.length > 0) {
 			var request = this.listRequest.shift();
-			ExecuteRequestServer(request.url, request.method, request.param, request.objectWating);
+			me.executeRequestServer(request.url, request.method, request.param, request.objectWating);
 		}
 		
 		if(!this.stopped) {
 			self.setTimeout(function(){
-				me.TreatRequestList();
+				me.treatRequestList();
 			}, 1000);
 		}
 	};
 	
-	function ExecuteRequestServer(_url, _method, _param, _objectWaiting) {
+	this.executeRequestServer = function executeRequestServer(_url, _method, _param, _objectWaiting) {
 		var _url = "/JavascriptComponents_WS/" + _url;
 		
 		$.ajax({
 			url: _url,
 			data: {
-				method: _method,
+				m: _method,
 				param: _param
 			},
 			dataType : "json",
 			type: "POST",
 			success: function(_json) {
-				_objectWaiting.Callback(_json.root);
+				_objectWaiting.callback(_json);
 			},
 			error: function(xhr, status) {
-				_objectWaiting.CallbackError(xhr, status);
+				_objectWaiting.callbackError(xhr, status);
 			}
 		});
 	}
